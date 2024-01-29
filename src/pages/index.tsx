@@ -16,6 +16,7 @@ import {
   useWeb3InboxAccount,
   useWeb3InboxClient,
 } from "@web3inbox/react";
+import useSendNotification from "@/utils/useSendNotifications";
 
 export default function Home() {
   // Wagmi
@@ -60,6 +61,20 @@ export default function Home() {
   const subscriptions = useSubscription();
   const isSubscribed = Boolean(subscription);
 
+  // Handle Test Notification
+  const { handleSendNotification, isSending } = useSendNotification();
+  const handleTestNotification = async () => {
+    if (isSubscribed) {
+      handleSendNotification({
+        title: "GM Hacker",
+        body: "Hack it until you make it!",
+        icon: `${window.location.origin}/WalletConnect-blue.svg`,
+        url: window.location.origin,
+        // ID retrieved from explorer api - Copy your notification type from WalletConnect Cloud and replace the default value below
+        type: "805e6d86-4b35-4b9a-b81a-a2f761e0e687",
+      });
+    }
+  };
   return (
     <>
       <Head>
@@ -69,9 +84,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <w3m-button />
         <div>
           <h1> W3I Stable Test</h1>
+          <w3m-button />
+
           <div
             style={{
               display: "flex",
@@ -83,6 +99,12 @@ export default function Home() {
             </button>
             <button className={styles.blueButton} onClick={subscribe}>
               {isSubscribed ? "Subscribed" : "Subscribe"}
+            </button>
+            <button
+              className={styles.blueButton}
+              onClick={handleTestNotification}
+            >
+              Test Notification
             </button>
           </div>
         </div>
