@@ -161,12 +161,15 @@ span.button:hover {
   font-size: 0.875rem;
   font-weight: 400;
   cursor: pointer;
+  box-shadow: rgba(255, 255, 255, 0.075) 0 1px 0 inset,
+    rgba(46, 54, 80, 0.075) 0 1px 1px;
   transition: background-color 0.2s, border-color 0.2s, color 0.2s;
 }
 
 .btn:disabled {
   background-color: hsl(var(--h), var(--s), 10%);
   color: var(--color-grey-500);
+  box-shadow: none;
   cursor: not-allowed;
 }
 
