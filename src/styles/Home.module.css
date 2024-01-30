@@ -5,7 +5,7 @@
   background: linear-gradient(
       to bottom,
       var(--color-bg),
-      transparent,
+      rgba(0, 0, 0, 0.1),
       var(--color-bg)
     ),
     radial-gradient(circle, transparent 0%, var(--color-bg) 70%);
