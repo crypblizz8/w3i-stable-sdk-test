@@ -98,25 +98,17 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <div>
+        <div className={styles.card}>
           <h1> W3I Stable Test</h1>
           <w3m-button />
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <button className={styles.blueButton} onClick={handleRegistration}>
+          <div className={styles.cardContainer}>
+            <button className={styles.btn} onClick={handleRegistration}>
               {isRegistered ? "Registered" : "Register"}
             </button>
-            <button className={styles.blueButton} onClick={subscribe}>
+            <button className={styles.btn} onClick={subscribe}>
               {isSubscribed ? "Subscribed" : "Subscribe"}
             </button>
-            <button
-              className={styles.blueButton}
-              onClick={handleTestNotification}
-            >
+            <button className={styles.btn} onClick={handleTestNotification}>
               Test Notification
             </button>
             <Messages />
