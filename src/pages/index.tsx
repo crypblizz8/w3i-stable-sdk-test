@@ -28,12 +28,7 @@ export default function Home() {
   // W3I
   const { data: w3iClient, isLoading: w3iClientIsLoading } =
     useWeb3InboxClient();
-  const { isRegistered, setAccount } = useWeb3InboxAccount(address);
-
-  useEffect(() => {
-    if (!address || !w3iClient) return;
-    setAccount(`eip155:1:${address}`);
-  }, [w3iClient, address, setAccount]);
+  const { isRegistered } = useWeb3InboxAccount(`eip155:1:${address}`);
 
   // Registration
   const { prepareRegistration } = usePrepareRegistration();
@@ -86,34 +81,57 @@ export default function Home() {
     <>
       <main className={styles.main}>
         {w3iClientIsLoading ? (
-          <div> Loading W3I Client</div>
+          <div
+            className={styles.card}
+            style={{
+              textAlign: "center",
+            }}
+          >
+            {" "}
+            Loading W3I Client
+          </div>
         ) : (
-          <div>
+          <div className={styles.card}>
             <h1> W3I Stable Test</h1>
-            <w3m-button />
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <button
-                className={styles.blueButton}
-                onClick={handleRegistration}
-              >
-                {isRegistered ? "Registered" : "Register"}
-              </button>
-              <button className={styles.blueButton} onClick={subscribe}>
-                {isSubscribed ? "Subscribed" : "Subscribe"}
-              </button>
-              <button
-                className={styles.blueButton}
-                onClick={handleTestNotification}
-              >
-                Test Notification
-              </button>
-              <Messages />
+            <div className={styles.cardContainer}>
+              <div className={styles.btnContainer}>
+                <span>Connect Wallet</span>
+                <w3m-button />
+              </div>
+              <div className={styles.btnContainer}>
+                <span>{isRegistered ? `Registered` : `Not Registered`}</span>
+                <button
+                  disabled={isRegistering || isRegistered}
+                  className={`${styles.btn} ${!isRegistered && styles.btnInfo}`}
+                  onClick={handleRegistration}
+                >
+                  {isRegistered ? "Already Registered" : "Register"}
+                </button>
+              </div>
+              <div className={styles.btnContainer}>
+                <span>{isSubscribed ? `Subscribed` : `Not Subscribed`}</span>
+                <button
+                  disabled={isSubscribing || isUnsubscribing}
+                  className={`${styles.btn} ${!isSubscribed && styles.btnInfo}`}
+                  onClick={isSubscribed ? unsubscribe : subscribe}
+                >
+                  {isSubscribed ? "Unsubscribe" : "Subscribe"}
+                </button>
+              </div>
+              <div className={styles.btnContainer}>
+                <span>Test Notification</span>
+
+                <button
+                  disabled={!isRegistered && !isSubscribed}
+                  className={styles.btn}
+                  onClick={handleTestNotification}
+                >
+                  Test Notification
+                </button>
+              </div>
+              <hr />
             </div>
+            <Messages />
           </div>
         )}
       </main>
