@@ -31,6 +31,8 @@ export default async function handler(
     return res.status(400).json({ success: false });
   }
 
+  console.log("NSPayload", notificationPayload);
+
   try {
     const result = await fetch(
       `https://notify.walletconnect.com/${projectId}/notify`,

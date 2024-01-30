@@ -7,6 +7,9 @@ function useSendNotification() {
   const [isSending, setIsSending] = useState<boolean>(false);
   const { address } = useAccount();
 
+  console.log({ address });
+  console.log({ isSending });
+
   const handleSendNotification = useCallback(
     async (notification: INotification) => {
       if (!address) {
@@ -23,7 +26,7 @@ function useSendNotification() {
         console.log({ success });
       } catch (error: any) {
         setIsSending(false);
-        console.error({ sendNotificationError: error });
+        console.error("Notification Error", error);
       }
     },
     [address]

@@ -7,6 +7,7 @@ import { useAccount, usePublicClient, useSignMessage } from "wagmi";
 
 // W3I Imports
 import {
+  useNotifications,
   usePrepareRegistration,
   useRegister,
   useSubscribe,
@@ -17,6 +18,11 @@ import {
   useWeb3InboxClient,
 } from "@web3inbox/react";
 import useSendNotification from "@/utils/useSendNotifications";
+import { sendNotification } from "@/utils/fetchNotify";
+import Messages from "@/components/Messages";
+
+const notificationsPerPage = 5;
+const isInfiniteScroll = true;
 
 export default function Home() {
   // Wagmi
@@ -28,17 +34,10 @@ export default function Home() {
     useWeb3InboxClient();
   const { isRegistered, setAccount } = useWeb3InboxAccount(address);
 
-  // console.log("address", address);
-  // console.log("w3icli", w3iClient);
-
   useEffect(() => {
     if (!address || !w3iClient) return;
     setAccount(`eip155:1:${address}`);
   }, [w3iClient, address]);
-
-  if (isRegistered) {
-    console.log("isRegistered", isRegistered);
-  }
 
   // Registration
   const { prepareRegistration } = usePrepareRegistration();
@@ -62,19 +61,34 @@ export default function Home() {
   const isSubscribed = Boolean(subscription);
 
   // Handle Test Notification
-  const { handleSendNotification, isSending } = useSendNotification();
   const handleTestNotification = async () => {
     if (isSubscribed) {
-      handleSendNotification({
-        title: "GM Hacker",
-        body: "Hack it until you make it!",
-        icon: `${window.location.origin}/WalletConnect-blue.svg`,
-        url: window.location.origin,
-        // ID retrieved from explorer api - Copy your notification type from WalletConnect Cloud and replace the default value below
-        type: "805e6d86-4b35-4b9a-b81a-a2f761e0e687",
-      });
+      try {
+        console.log({ address });
+        await sendNotification({
+          accounts: [`eip155:1:${address}`],
+          notification: {
+            title: "GM Stable Test",
+            body: "Hack it until you make it!",
+            icon: `${window.location.origin}/WalletConnect-blue.svg`,
+            url: window.location.origin,
+            type: "805e6d86-4b35-4b9a-b81a-a2f761e0e687",
+          },
+        });
+      } catch (error: any) {
+        console.error("Notification Error", error);
+      }
     }
   };
+
+  // Get Notifications
+  const { data: notificationsData } = useNotifications(
+    notificationsPerPage,
+    isInfiniteScroll
+  );
+
+  console.log({ notificationsData });
+
   return (
     <>
       <Head>
@@ -87,7 +101,6 @@ export default function Home() {
         <div>
           <h1> W3I Stable Test</h1>
           <w3m-button />
-
           <div
             style={{
               display: "flex",
@@ -106,6 +119,7 @@ export default function Home() {
             >
               Test Notification
             </button>
+            <Messages />
           </div>
         </div>
       </main>
