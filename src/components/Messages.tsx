@@ -2,8 +2,16 @@ import { useNotifications } from "@web3inbox/react";
 import React from "react";
 import styles from "@/styles/Messages.module.css";
 
+const notificationsPerPage = 5;
+const isInfiniteScroll = true;
+
 function Messages() {
-  const { data: notifications } = useNotifications(3, false);
+  const { data: notifications, fetchNextPage } = useNotifications(
+    notificationsPerPage,
+    isInfiniteScroll
+  );
+
+  console.log({ checkNotifs: notifications });
 
   return (
     <div>

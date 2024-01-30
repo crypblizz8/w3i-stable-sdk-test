@@ -5,7 +5,6 @@ import { useAccount, useSignMessage } from "wagmi";
 
 // W3I Imports
 import {
-  useNotifications,
   usePrepareRegistration,
   useRegister,
   useSubscribe,
@@ -16,9 +15,6 @@ import {
 } from "@web3inbox/react";
 import { sendNotification } from "@/utils/fetchNotify";
 import Messages from "@/components/Messages";
-
-const notificationsPerPage = 5;
-const isInfiniteScroll = true;
 
 export default function Home() {
   // Wagmi
@@ -70,12 +66,6 @@ export default function Home() {
       }
     }
   };
-
-  // Get Notifications
-  const { data: notificationsData } = useNotifications(
-    notificationsPerPage,
-    isInfiniteScroll
-  );
 
   return (
     <>
