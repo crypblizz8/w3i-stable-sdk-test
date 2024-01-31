@@ -1,11 +1,10 @@
 import styles from "@/styles/Home.module.css";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 // Wagmi Imports
 import { useAccount, useSignMessage } from "wagmi";
 
 // W3I Imports
 import {
-  useNotifications,
   usePrepareRegistration,
   useRegister,
   useSubscribe,
@@ -16,9 +15,6 @@ import {
 } from "@web3inbox/react";
 import { sendNotification } from "@/utils/fetchNotify";
 import Messages from "@/components/Messages";
-
-const notificationsPerPage = 5;
-const isInfiniteScroll = true;
 
 export default function Home() {
   // Wagmi
@@ -33,6 +29,9 @@ export default function Home() {
   // Registration
   const { prepareRegistration } = usePrepareRegistration();
   const { register, isLoading: isRegistering } = useRegister();
+
+  //UI
+  const [isSending, setIsSending] = useState(false);
 
   const handleRegistration = async () => {
     try {
@@ -53,6 +52,7 @@ export default function Home() {
   // Handle Test Notification
   const handleTestNotification = async () => {
     if (isSubscribed) {
+      setIsSending(true);
       try {
         console.log({ address });
         await sendNotification({
@@ -65,17 +65,13 @@ export default function Home() {
             type: "805e6d86-4b35-4b9a-b81a-a2f761e0e687",
           },
         });
+        setIsSending(false);
       } catch (error: any) {
         console.error("Notification Error", error);
+        setIsSending(false);
       }
     }
   };
-
-  // Get Notifications
-  const { data: notificationsData } = useNotifications(
-    notificationsPerPage,
-    isInfiniteScroll
-  );
 
   return (
     <>
@@ -122,16 +118,16 @@ export default function Home() {
                 <span>Test Notification</span>
 
                 <button
-                  disabled={!isRegistered && !isSubscribed}
+                  disabled={(!isRegistered && !isSubscribed) || isSending}
                   className={styles.btn}
                   onClick={handleTestNotification}
                 >
-                  Test Notification
+                  {isSending ? "Sending..." : "Test Notification"}
                 </button>
               </div>
               <hr />
             </div>
-            <Messages />
+            {isSubscribed && <Messages />}
           </div>
         )}
       </main>
