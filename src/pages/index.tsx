@@ -127,7 +127,7 @@ export default function Home() {
               </div>
               <hr />
             </div>
-            <Messages />
+            {isSubscribed && <Messages />}
           </div>
         )}
       </main>
